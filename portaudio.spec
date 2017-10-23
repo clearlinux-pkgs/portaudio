@@ -4,12 +4,13 @@
 #
 Name     : portaudio
 Version  : 190600.20161030
-Release  : 1
+Release  : 2
 URL      : http://www.portaudio.com/archives/pa_stable_v190600_20161030.tgz
 Source0  : http://www.portaudio.com/archives/pa_stable_v190600_20161030.tgz
 Summary  : Portable audio I/O
 Group    : Development/Tools
 License  : MIT
+Requires: portaudio-lib
 BuildRequires : alsa-lib-dev
 BuildRequires : cmake
 BuildRequires : python-dev
@@ -21,10 +22,19 @@ BuildRequires : scons
 %package dev
 Summary: dev components for the portaudio package.
 Group: Development
+Requires: portaudio-lib
 Provides: portaudio-devel
 
 %description dev
 dev components for the portaudio package.
+
+
+%package lib
+Summary: lib components for the portaudio package.
+Group: Libraries
+
+%description lib
+lib components for the portaudio package.
 
 
 %prep
@@ -35,7 +45,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1507332316
+export SOURCE_DATE_EPOCH=1508788475
 mkdir clr-build
 pushd clr-build
 cmake .. -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_SHARED_LIBS:BOOL=ON -DLIB_INSTALL_DIR:PATH=/usr/lib64 -DCMAKE_AR=/usr/bin/gcc-ar -DLIB_SUFFIX=64 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_RANLIB=/usr/bin/gcc-ranlib
@@ -43,7 +53,7 @@ make VERBOSE=1  %{?_smp_mflags}
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1507332316
+export SOURCE_DATE_EPOCH=1508788475
 rm -rf %{buildroot}
 pushd clr-build
 %make_install
@@ -55,5 +65,8 @@ popd
 %files dev
 %defattr(-,root,root,-)
 /usr/include/*.h
-/usr/lib/libportaudio.so
 /usr/lib64/pkgconfig/portaudio-2.0.pc
+
+%files lib
+%defattr(-,root,root,-)
+/usr/lib/libportaudio.so
