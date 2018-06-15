@@ -13,7 +13,7 @@ License  : MIT
 Requires: portaudio-lib
 BuildRequires : alsa-lib-dev
 BuildRequires : cmake
-BuildRequires : python-dev
+
 BuildRequires : scons
 
 %description
