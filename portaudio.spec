@@ -4,7 +4,7 @@
 #
 Name     : portaudio
 Version  : 190600.20161030
-Release  : 6
+Release  : 7
 URL      : http://www.portaudio.com/archives/pa_stable_v190600_20161030.tgz
 Source0  : http://www.portaudio.com/archives/pa_stable_v190600_20161030.tgz
 Summary  : Portable audio I/O
