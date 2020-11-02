@@ -4,17 +4,17 @@
 #
 Name     : portaudio
 Version  : 190600.20161030
-Release  : 7
+Release  : 8
 URL      : http://www.portaudio.com/archives/pa_stable_v190600_20161030.tgz
 Source0  : http://www.portaudio.com/archives/pa_stable_v190600_20161030.tgz
 Summary  : Portable audio I/O
 Group    : Development/Tools
 License  : MIT
-Requires: portaudio-lib
+Requires: portaudio-lib = %{version}-%{release}
+Requires: portaudio-license = %{version}-%{release}
 BuildRequires : alsa-lib-dev
-BuildRequires : cmake
-
-BuildRequires : scons
+BuildRequires : buildreq-cmake
+BuildRequires : buildreq-scons
 
 %description
 
@@ -22,8 +22,9 @@ BuildRequires : scons
 %package dev
 Summary: dev components for the portaudio package.
 Group: Development
-Requires: portaudio-lib
-Provides: portaudio-devel
+Requires: portaudio-lib = %{version}-%{release}
+Provides: portaudio-devel = %{version}-%{release}
+Requires: portaudio = %{version}-%{release}
 
 %description dev
 dev components for the portaudio package.
@@ -32,27 +33,49 @@ dev components for the portaudio package.
 %package lib
 Summary: lib components for the portaudio package.
 Group: Libraries
+Requires: portaudio-license = %{version}-%{release}
 
 %description lib
 lib components for the portaudio package.
 
 
+%package license
+Summary: license components for the portaudio package.
+Group: Default
+
+%description license
+license components for the portaudio package.
+
+
 %prep
 %setup -q -n portaudio
+cd %{_builddir}/portaudio
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1508790599
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1604353969
+export GCC_IGNORE_WERROR=1
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %reconfigure --disable-static --without-jack \
 --without-oss
-make V=1  %{?_smp_mflags}
+make  %{?_smp_mflags}
 
 %install
-export SOURCE_DATE_EPOCH=1508790599
+export SOURCE_DATE_EPOCH=1604353969
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/package-licenses/portaudio
+cp %{_builddir}/portaudio/LICENSE.txt %{buildroot}/usr/share/package-licenses/portaudio/4ee19ebb510fc18b65c179ff2df54ab9bb124f2d
+cp %{_builddir}/portaudio/bindings/cpp/COPYING %{buildroot}/usr/share/package-licenses/portaudio/77bdaf889901b38747bab68f59850dcdf988e957
+cp %{_builddir}/portaudio/doc/src/license.dox %{buildroot}/usr/share/package-licenses/portaudio/475c65c387c689b04753e811d47bd4929a5603db
 %make_install
 
 %files
@@ -60,7 +83,8 @@ rm -rf %{buildroot}
 
 %files dev
 %defattr(-,root,root,-)
-/usr/include/*.h
+/usr/include/pa_linux_alsa.h
+/usr/include/portaudio.h
 /usr/lib64/libportaudio.so
 /usr/lib64/pkgconfig/portaudio-2.0.pc
 
@@ -68,3 +92,9 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 /usr/lib64/libportaudio.so.2
 /usr/lib64/libportaudio.so.2.0.0
+
+%files license
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/portaudio/475c65c387c689b04753e811d47bd4929a5603db
+/usr/share/package-licenses/portaudio/4ee19ebb510fc18b65c179ff2df54ab9bb124f2d
+/usr/share/package-licenses/portaudio/77bdaf889901b38747bab68f59850dcdf988e957
