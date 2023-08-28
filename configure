@@ -1,2 +1,1 @@
---without-jack
---without-oss
+--enable-cxx

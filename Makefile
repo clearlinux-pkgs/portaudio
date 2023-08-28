@@ -1,5 +1,5 @@
 PKG_NAME := portaudio
-URL = http://www.portaudio.com/archives/pa_stable_v190600_20161030.tgz
+URL = https://github.com/PortAudio/portaudio/archive/refs/tags/v19.7.0.tar.gz
 ARCHIVES = 
 
 include ../common/Makefile.common
